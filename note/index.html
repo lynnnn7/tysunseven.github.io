@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>数学笔记导航（支持 LaTeX）</title>
 
-  <!-- 引入 MathJax 并配置 -->
+  <!-- MathJax 配置 -->
   <script>
-    // 配置 MathJax 识别 $...$ 作为行内公式，$$...$$ 作为块级公式
     window.MathJax = {
       tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']], // 行内公式分隔符
-        displayMath: [['$$', '$$'], ['\\[', '\\]']] // 块级公式分隔符
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
       },
       startup: {
         pageReady: function() {
@@ -22,223 +21,19 @@
       }
     };
   </script>
-  <!-- 加载 MathJax 核心库 -->
+
+  <!-- 加载 MathJax -->
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
-      background: linear-gradient(to top, #012340, #034C8C, #03588C, #658DA6);
-      color: #f2f2f2;
-      background-attachment: fixed;
-      overflow-x: hidden;
-      min-height: 100vh;
-    }
-
-    /* 星空样式（保留原有动画） */
-    .stars {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      top: 0;
-      left: 0;
-      overflow: hidden;
-      z-index: -1;
-    }
-    .star {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: white;
-      border-radius: 50%;
-      opacity: 0.8;
-      animation: twinkle 3s infinite ease-in-out;
-    }
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
-    }
-    .formula {
-      position: absolute;
-      font-size: 1.3em;
-      color: #aee3ff;
-      opacity: 0.9;
-      user-select: none;
-      animation: float 12s ease-in-out infinite;
-    }
-    @keyframes float {
-      0%   { transform: translateY(0px); opacity: 0.5; }
-      50%  { transform: translateY(-20px); opacity: 1; }
-      100% { transform: translateY(0px); opacity: 0.5; }
-    }
-
-    /* 导航栏容器（完全复用参考样式） */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100vh;
-      width: 220px;
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(6px);
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: width 0.3s ease;
-      overflow: hidden;
-      z-index: 100;
-    }
-
-    /* 折叠时缩小宽度 */
-    .sidebar.collapsed {
-      width: 60px;
-    }
-
-    /* 折叠按钮 */
-    .toggle-btn {
-      cursor: pointer;
-      color: #fff;
-      font-size: 20px;
-      margin: 20px 0;
-      background: none;
-      border: none;
-      transition: transform 0.3s;
-    }
-
-    .toggle-btn:hover {
-      transform: scale(1.2);
-    }
-
-    /* 导航链接样式 */
-    .nav-links {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      width: 100%;
-    }
-
-    .nav-links a {
-      display: block;
-      width: 100%;
-      color: #f0f0f0;
-      text-decoration: none;
-      padding: 12px 20px;
-      transition: background 0.2s, padding-left 0.2s;
-    }
-
-    .nav-links a:hover, .nav-links a.active {
-      background: rgba(255, 255, 255, 0.15);
-      padding-left: 30px;
-    }
-
-    .sidebar.collapsed .nav-links a {
-      text-align: center;
-      padding: 12px 0;
-    }
-
-    .sidebar.collapsed .nav-links a span {
-      display: none;
-    }
-
-    /* 主体内容区 */
-    .content {
-      margin-left: 240px;
-      padding: 40px 60px;
-      transition: margin-left 0.3s ease;
-    }
-
-    .sidebar.collapsed ~ .content {
-      margin-left: 80px;
-    }
-
-    /* 每个章节（复用参考样式） */
-    section {
-      margin-bottom: 60px;
-      padding: 40px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      transition: transform 0.2s;
-    }
-
-    section:hover {
-      transform: translateY(-4px);
-    }
-
-    section h2 {
-      text-align: center;
-      font-size: 1.6em;
-      color: #fff;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
-      margin-bottom: 25px;
-      color: #ffda79; /* 保持原章节标题颜色 */
-    }
-
-    /* 表格样式（优化适配内容） */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      border-radius: 8px;
-      overflow: hidden;
-      background: rgba(0, 0, 0, 0.1);
-    }
-
-    td {
-      padding: 12px 8px;
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .table-link {
-      color: #8fd3ff;
-      text-decoration: none;
-      transition: color 0.2s, transform 0.2s;
-      display: inline-block;
-    }
-
-    .table-link:hover {
-      color: #fff;
-      text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-      transform: scale(1.05);
-    }
-
-    /* 小屏自适应 */
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 180px;
-      }
-      .sidebar.collapsed {
-        width: 0;
-      }
-      .content {
-        margin-left: 200px;
-        padding: 30px 20px;
-      }
-      .sidebar.collapsed ~ .content {
-        margin-left: 0;
-      }
-      section {
-        padding: 20px;
-        margin-bottom: 40px;
-      }
-      td {
-        padding: 8px 4px;
-      }
-      .table-link {
-        font-size: 0.9em;
-      }
-    }
-  </style>
+  <!-- 引入外部样式表 -->
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
+<body>
   <!-- 星空背景 -->
   <div class="stars" id="stars"></div>
 
-  <!-- 浮动数学公式 -->
+  <!-- 浮动公式 -->
   <div class="formula" style="top:10%; left:10%;">$E = mc^2$</div>
   <div class="formula" style="top:25%; left:70%;">$\nabla \cdot \mathbf{E} = \frac{\rho}{\varepsilon_0}$</div>
   <div class="formula" style="top:60%; left:20%;">$a_n = a_1 r^{n-1}$</div>
@@ -246,7 +41,7 @@
   <div class="formula" style="top:40%; left:85%;">$\sum_{n=1}^\infty \frac{1}{n^2} = \frac{\pi^2}{6}$</div>
   <div class="formula" style="top:30%; left:15%;">$\det(A) = \sum_{\sigma} \text{sgn}(\sigma) \prod_{i} A_{i,\sigma(i)}$</div>
 
-  <!-- 折叠导航栏（完全复用参考结构） -->
+  <!-- 侧边导航栏 -->
   <div class="sidebar" id="sidebar">
     <button class="toggle-btn" id="toggleBtn">☰</button>
     <div class="nav-links">
@@ -261,67 +56,68 @@
     </div>
   </div>
 
-  <!-- 内容区（整合所有笔记链接，按章节分组） -->
+  <!-- 内容区 -->
+   
   <div class="content">
-    <!-- Analysis 章节 -->
+    <!-- ================= Analysis ================= -->
     <section id="analysis">
       <h2>Analysis</h2>
       <table>
         <tr>
-          <td><a href="Analysis.pdf" title="Analysis" class="table-link">Analysis</a></td>
-          <td><a href="Real_Analysis.pdf" title="Real_Analysis" class="table-link">Real Analysis</a></td>
-          <td><a href="Complex_Analysis.pdf" title="Complex_Analysis" class="table-link">Complex Analysis</a></td>
+          <td><a href="Analysis.pdf" class="table-link">Analysis</a></td>
+          <td><a href="Real_Analysis.pdf" class="table-link">Real Analysis</a></td>
+          <td><a href="Complex_Analysis.pdf" class="table-link">Complex Analysis</a></td>
         </tr>
         <tr>
           <td><a href="https://rec.ustc.edu.cn/share/6b9bf8f0-2dd0-11ed-8f6e-b1f931135ded" class="table-link">李皓昭20年春复分析讲义</a></td>
-          <td><a href="Functional_Analysis.pdf" title="Functional_Analysis" class="table-link">Functional Analysis</a></td>
-          <td><a href="Fourier_Analysis.pdf" title="Fourier_Analysis" class="table-link">Fourier Analysis</a></td>
+          <td><a href="Functional_Analysis.pdf" class="table-link">Functional Analysis</a></td>
+          <td><a href="Fourier_Analysis.pdf" class="table-link">Fourier Analysis</a></td>
         </tr>
       </table>
     </section>
 
-    <!-- Equation 章节 -->
+    <!-- ================= Equation ================= -->
     <section id="equation">
       <h2>Equation</h2>
       <table>
         <tr>
-          <td><a href="Ordinary Differential Equation.pdf" title="Ordinary Differential Equation" class="table-link">Ordinary Differential Equation</a></td>
-          <td><a href="Partial Differential Equation 1.pdf" title="Partial Differential Equation 1" class="table-link">Partial Differential Equation 1</a></td>
-          <td><a href="Complex Differential Equation.pdf" title="Complex Differential Equation" class="table-link">Complex Differential Equation</a></td>
+          <td><a href="Ordinary Differential Equation.pdf" class="table-link">Ordinary Differential Equation</a></td>
+          <td><a href="Partial Differential Equation 1.pdf" class="table-link">Partial Differential Equation 1</a></td>
+          <td><a href="Complex Differential Equation.pdf" class="table-link">Complex Differential Equation</a></td>
         </tr>
         <tr>
-          <td><a href="Partial Differential Equation 2.pdf" title="Partial Differential Equation 2" class="table-link">Partial Differential Equation 2</a></td>
+          <td><a href="Partial Differential Equation 2.pdf" class="table-link">Partial Differential Equation 2</a></td>
           <td></td>
           <td></td>
         </tr>
       </table>
     </section>
 
-    <!-- Probability 章节 -->
+    <!-- ================= Probability ================= -->
     <section id="probability">
       <h2>Probability</h2>
       <table>
         <tr>
-          <td><a href="Probability_Theory.pdf" title="Probability Theory" class="table-link">Probability Theory</a></td>
-          <td><a href="http://home.ustc.edu.cn/~richardzheng/math/Probability.pdf" title="郑滕飞的概率论笔记" class="table-link">郑滕飞的概率论笔记</a></td>
+          <td><a href="Probability_Theory.pdf" class="table-link">Probability Theory</a></td>
+          <td><a href="http://home.ustc.edu.cn/~richardzheng/math/Probability.pdf" class="table-link">郑滕飞的概率论笔记</a></td>
           <td></td>
         </tr>
       </table>
     </section>
 
-    <!-- Algebra 章节 -->
+    <!-- ================= Algebra ================= -->
     <section id="algebra">
       <h2>Algebra</h2>
       <table>
         <tr>
-          <td><a href="Linear_Algebra.pdf" title="Linear Algebra" class="table-link">Linear Algebra</a></td>
-          <td><a href="Abstract_Algebra.pdf" title="Abstract Algebra" class="table-link">Abstract Algebra</a></td>
-          <td><a href="https://rec.ustc.edu.cn/share/fdec2d40-8fc1-11ed-89b1-73913b5f017a" title="陈小伍20年春近世代数H课件与板书" class="table-link">陈小伍20年春近世代数H课件与板书</a></td>
+          <td><a href="Linear_Algebra.pdf" class="table-link">Linear Algebra</a></td>
+          <td><a href="Abstract_Algebra.pdf" class="table-link">Abstract Algebra</a></td>
+          <td><a href="https://rec.ustc.edu.cn/share/fdec2d40-8fc1-11ed-89b1-73913b5f017a" class="table-link">陈小伍20年春近世代数H课件与板书</a></td>
         </tr>
         <tr>
           <td><a href="Algebra.pdf" class="table-link">Algebra</a></td>
           <td><a href="Commutative_Algebra.pdf" class="table-link">Commutative Algebra</a></td>
-          <td><a href="Lie_Algebra.pdf" title="Lie Algebra" class="table-link">Lie Algebra</a></td>
+          <td><a href="Lie_Algebra.pdf" class="table-link">Lie Algebra</a></td>
         </tr>
         <tr>
           <td><a href="Category_Theory.pdf" class="table-link">Category Theory</a></td>
@@ -331,7 +127,7 @@
       </table>
     </section>
 
-    <!-- Topology 章节 -->
+    <!-- ================= Topology ================= -->
     <section id="topology">
       <h2>Topology</h2>
       <table>
@@ -348,17 +144,17 @@
       </table>
     </section>
 
-    <!-- Geometry 章节 -->
+    <!-- ================= Geometry ================= -->
     <section id="geometry">
       <h2>Geometry</h2>
       <table>
         <tr>
           <td><a href="https://rec.ustc.edu.cn/share/3d669e90-8fc3-11ed-b152-3f15f4cd2cb6" class="table-link">几何学基础讲义（盛茂、王作勤）</a></td>
-          <td><a href="Differential_Geometry.pdf" title="Differential Geometry" class="table-link">Differential Geometry</a></td>
+          <td><a href="Differential_Geometry.pdf" class="table-link">Differential Geometry</a></td>
           <td><a href="Manifolds.pdf" class="table-link">Smooth Manifolds</a></td>
         </tr>
         <tr>
-          <td><a href="Riemannian_Geometry.pdf" title="Riemannian Geometry" class="table-link">Riemannian Geometry</a></td>
+          <td><a href="Riemannian_Geometry.pdf" class="table-link">Riemannian Geometry</a></td>
           <td><a href="Complex_Geometry.pdf" class="table-link">Complex Geometry</a></td>
           <td><a href="Symplectic Geometry.pdf" class="table-link">Symplectic Geometry</a></td>
         </tr>
@@ -370,7 +166,7 @@
       </table>
     </section>
 
-    <!-- Physics 章节 -->
+    <!-- ================= Physics ================= -->
     <section id="physics">
       <h2>Physics</h2>
       <table>
@@ -387,13 +183,13 @@
       </table>
     </section>
 
-    <!-- Computation 章节 -->
+    <!-- ================= Computation ================= -->
     <section id="computation">
       <h2>Computation</h2>
       <table>
         <tr>
           <td><a href="Finite Element Methods.pdf" class="table-link">Finite Element Methods</a></td>
-          <td><a href="Numerical solution for Partial Differential Equations.pdf" class="table-link">Numerical solution for Partial Differential Equations</a></td>
+          <td><a href="Numerical solution for Partial Differential Equations.pdf" class="table-link">Numerical solution for PDEs</a></td>
           <td><a href="2024秋PDE数值解讲义.pdf" class="table-link">2024秋PDE数值解讲义</a></td>
         </tr>
         <tr>
@@ -423,70 +219,10 @@
         </tr>
       </table>
     </section>
+
   </div>
 
-  <script>
-    // 星空生成脚本
-    const starsContainer = document.getElementById('stars');
-    const starCount = 120;
-    for (let i = 0; i < starCount; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-      star.style.top = Math.random() * 100 + '%';
-      star.style.left = Math.random() * 100 + '%';
-      star.style.width = star.style.height = Math.random() * 3 + 'px';
-      star.style.animationDelay = Math.random() * 3 + 's';
-      starsContainer.appendChild(star);
-    }
-
-    // 手动触发 MathJax 渲染
-    if (window.MathJax) {
-      MathJax.typesetPromise().catch(err => console.error('MathJax 渲染错误:', err));
-    }
-
-    // 折叠按钮功能（复用参考脚本）
-    const sidebar = document.getElementById('sidebar');
-    const toggleBtn = document.getElementById('toggleBtn');
-    toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-    });
-
-    // 当前章节高亮（复用参考脚本）
-    const sections = document.querySelectorAll("section");
-    const navLinks = document.querySelectorAll(".nav-links a");
-
-    window.addEventListener("scroll", () => {
-      let current = "";
-      sections.forEach((section) => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        // 滚动到章节中间时激活高亮
-        if (scrollY >= sectionTop - 300 && scrollY < sectionTop + sectionHeight - 300) {
-          current = section.getAttribute("id");
-        }
-      });
-      navLinks.forEach((a) => {
-        a.classList.remove("active");
-        if (a.getAttribute("href") === "#" + current) {
-          a.classList.add("active");
-        }
-      });
-    });
-
-    // 平滑滚动效果
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 100,
-            behavior: 'smooth'
-          });
-        }
-      });
-    });
-  </script>
+  <!-- 脚本文件 -->
+  <script src="main.js"></script>
 </body>
 </html>
