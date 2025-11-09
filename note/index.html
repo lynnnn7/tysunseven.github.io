@@ -1,276 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>笔记</title>
-    <style>
-      .indented {
-          text-indent: 2em; /* 两个字母 "m" 的宽度 */
-        }
-        .centered-table {
-        width: 100%;
-        margin: 0 auto;
-        table-layout: fixed; /* 设置表格布局方式为固定宽度 */
-    }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数学笔记导航（支持 LaTeX）</title>
 
-    .centered-table td {
-        width: 33%; /* 每列宽度占据表格的四分之一 */
+  <!-- 引入 MathJax 并配置 -->
+  <script>
+    // 配置 MathJax 识别 $...$ 作为行内公式，$$...$$ 作为块级公式
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']], // 行内公式分隔符
+        displayMath: [['$$', '$$'], ['\\[', '\\]']] // 块级公式分隔符
+      },
+      startup: {
+        pageReady: function() {
+          return MathJax.startup.defaultPageReady().then(function() {
+            console.log('LaTeX 公式渲染完成');
+          });
+        }
+      }
+    };
+  </script>
+  <!-- 加载 MathJax 核心库 -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      color: white;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(to top, #012340, #034C8C, #03588C, #658DA6);
+      overflow-x: hidden;
+      min-height: 100vh;
+      padding-bottom: 60px; /* 底部留白 */
     }
-    </style>
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      z-index: -1;
+    }
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: twinkle 3s infinite ease-in-out;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+    .formula {
+      position: absolute;
+      font-size: 1.3em;
+      color: #aee3ff;
+      opacity: 0.9;
+      user-select: none;
+      animation: float 12s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%   { transform: translateY(0px); opacity: 0.5; }
+      50%  { transform: translateY(-20px); opacity: 1; }
+      100% { transform: translateY(0px); opacity: 0.5; }
+    }
+    table {
+      width: 90%;
+      margin: 60px auto;
+      border-collapse: collapse;
+      background: rgba(0, 0, 0, 0.4);
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      color: #fff;
+    }
+    td {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+      padding: 12px 8px; /* 增加内边距，提升可读性 */
+    }
+    a {
+      color: #8fd3ff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s, transform 0.2s;
+      display: inline-block; /* 确保变换效果正常 */
+    }
+    a:hover {
+      color: #fff;
+      transform: scale(1.05);
+    }
+    b {
+      font-size: 1.2em;
+      letter-spacing: 1px;
+      color: #ffda79;
+      display: block;
+      padding: 8px 0;
+    }
+    /* 响应式调整 */
+    @media (max-width: 768px) {
+      table {
+        width: 98%;
+        margin: 30px auto;
+      }
+      td {
+        padding: 8px 4px;
+      }
+      a {
+        font-size: 0.9em;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- <p class="indented">我就像一台CPU还不错，但内存小得可怜的电脑，理解能力还可以，但东西很少能留在脑子里，所以我需要外部的存储器，也就是笔记</p>
-     -->
-    <table border="1" cellpadding = "8" class="centered-table">
-        <tr>
-        <td colspan="3" align="center">
+
+  <div class="stars" id="stars"></div>
+
+  <!-- 浮动数学公式 -->
+  <div class="formula" style="top:10%; left:10%;">$E = mc^2$</div>
+  <div class="formula" style="top:25%; left:70%;">$\nabla \cdot \mathbf{E} = \frac{\rho}{\varepsilon_0}$</div>
+  <div class="formula" style="top:60%; left:20%;">$a_n = a_1 r^{n-1}$</div>
+  <div class="formula" style="top:75%; left:80%;">$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$</div>
+  <div class="formula" style="top:40%; left:85%;">$\sum_{n=1}^\infty \frac{1}{n^2} = \frac{\pi^2}{6}$</div>
+  <div class="formula" style="top:30%; left:15%;">$\det(A) = \sum_{\sigma} \text{sgn}(\sigma) \prod_{i} A_{i,\sigma(i)}$</div>
+
+  <!-- 完整内容表格 -->
+  <table cellpadding="8">
+    <tr>
+      <td colspan="3" align="center">
         <b>Analysis</b>
-        </td>
-        </tr>
-        <tr>
-        <td align="center">
-            <a href="Analysis.pdf" title="Analysis">Analysis</a>
-        </td>
-        <td align="center">
-            <a href="Real_Analysis.pdf"title="Real_Analysis">Real Analysis</a>
-        </td>
-        <td align="center">
-            <a href="Complex_Analysis.pdf"title="Complex_Analysis">Complex Analysis</a>
-        </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <a href="https://rec.ustc.edu.cn/share/6b9bf8f0-2dd0-11ed-8f6e-b1f931135ded">李皓昭20年春复分析讲义</a>
-            </td>
-            <td align="center">
-                <a href="Functional_Analysis.pdf" title="Functional_Analysis">Functional Analysis</a>
-            </td>  
-            <td align="center">
-                <a href="Fourier_Analysis.pdf" title="Fourier_Analysis">Fourier Analysis</a>
-            </td> 
-        </tr>
-        <tr>
-            <td colspan="3" align="center">
-            <b>Equation</b>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <a href="Ordinary Differential Equation.pdf" title="Ordinary Differential Equation">Ordinary Differential Equation</a>
-            </td>
-            <td align="center">
-                <a href="Partial Differential Equation 1.pdf" title="Partial Differential Equation 1">Partial Differential Equation 1</a>
-            </td>
-            <td align="center">
-                <a href="Complex Differential Equation.pdf" title="Complex Differential Equation">Complex Differential Equation</a>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <a href="Partial Differential Equation 2.pdf" title="Partial Differential Equation 2">Partial Differential Equation 2</a>
-            </td>
-            <td align="center"></td>
-        </tr>
-        <tr>
-            <td colspan="3" align="center">
-            <b>Probability</b>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <a href="Probability_Theory.pdf" title="Probability Theory">Probability Theory</a>
-              </td>
-              <td align="center">
-                <a href="http://home.ustc.edu.cn/~richardzheng/math/Probability.pdf" title="郑滕飞的概率论笔记">郑滕飞的概率论笔记</a>
-              </td>
-              <td align="center"></td>
-        </tr>
-        <tr>
-            <td colspan="3" align="center">
-            <b>Algebra</b>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-              <a href="Linear_Algebra.pdf" title="Linear Algebra">Linear Algebra</a>
-            </td>
-            <td align="center">
-              <a href="Abstract_Algebra.pdf" title="Abstract Algebra">Abstract Algebra</a>
-            </td>
-            <td align="center">
-              <a href="https://rec.ustc.edu.cn/share/fdec2d40-8fc1-11ed-89b1-73913b5f017a" title="陈小伍20年春近世代数H课件与板书">陈小伍20年春近世代数H课件与板书</a>
-            </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="Algebra.pdf">Algebra</a>
-            </td>
-            <td align="center">
-              <a href="Commutative_Algebra.pdf">Commutative Algebra</a>
-            </td>
-            <td align="center">
-              <a href="Lie_Algebra.pdf" title="Lie Algebra">Lie Algebra</a>
-            </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="Category_Theory.pdf">Category Theory</a>
-            </td>
-            <td align="center"></td>
-            <td align="center"></td>
-          </tr>
-          <tr>
-            <td colspan="3" align="center">
-                <b>Topology</b>
-                </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="General Topology.pdf">General Topology</a>
-            </td>
-            <td align="center">
-              <a href="Algebraic Topology I.pdf">Algebraic Topology I</a>
-            </td>
-            <td align="center">
-              <a href="Algebraic_Topology.pdf">Algebraic Topology II</a>
-            </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="2022年春代数拓扑1.pdf">2022年春代数拓扑1</a>
-            </td>
-            <td align="center">
-              <a href="2022年秋代数拓扑2.pdf">2022年秋代数拓扑2</a>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3" align="center">
-                <b>Geometry</b>
-                </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="https://rec.ustc.edu.cn/share/3d669e90-8fc3-11ed-b152-3f15f4cd2cb6">几何学基础讲义（盛茂、王作勤）</a>
-            </td>
-            <td align="center">
-              <a href="Differential_Geometry.pdf" title="Differential Geometry">Differential Geometry</a>
-            </td>
-            <td align="center">
-              <a href="Manifolds.pdf">Smooth Manifolds</a>
-            </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="Riemannian_Geometry.pdf" title="Riemannian Geometry">Riemannian Geometry</a>
-            </td>
-            <td align="center">
-              <a href="Complex_Geometry.pdf">Complex Geometry</a>
-            </td>
-            <td align="center">
-              <a href="Symplectic Geometry.pdf">Symplectic Geometry</a>
-            </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="Riemann_Surface.pdf">Riemann Surface</a>
-            </td>
-            <td align="center">
-              <a href="Algebraic_Geometry.pdf">Algebraic Geometry</a>
-            </td>
-            <td align="center"></td>
-          </tr>
-          <tr>
-            <td colspan="3" align="center">
-                <b>Physics</b>
-                </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="Theoretical Machanics for Mathematicians.pdf">Theoretical Mechanics for Mathematicians</a>
-            </td>
-            <td align="center">
-              <a href="Quantum_Mechanics.pdf">Quantum Mechanics</a>
-            </td>
-            <td align="center">
-              <a href="连续介质力学讲义1（黄建华）.pdf">连续介质力学讲义1（黄建华）</a>
-            </td>            
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="连续介质力学讲义2（黄建华）.pdf">连续介质力学讲义2（黄建华）</a>
-            </td>
-            <td align="center">
-              <a href="Continuum_Mechanics.pdf">Continuum Mechanics</a>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3" align="center">
-                <b>Computation</b>
-                </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="Finite Element Methods.pdf">Finite Element Methods</a>
-            </td>
-            <td align="center">
-              <a href="Numerical solution for Partial Differential Equations.pdf">Numerical solution for Partial Differential Equations</a>
-            </td>
-            <td align="center">
-              <a href="2024秋PDE数值解讲义.pdf">2024秋PDE数值解讲义</a>
-            </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="2024秋PDE数值解作业参考.pdf">2024秋PDE数值解作业参考</a>
-            </td>
-            <td align="center">
-              <a href="2024秋PDE数值解助教复习课.pdf">2024秋PDE数值解助教复习课</a>
-            </td>
-            <td align="center">
-              <a href="Spline Functions and Approximation Theory.pdf">Spline Functions and Approximation Theory</a>
-            </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="https://tysunseven.github.io/2024-Fall-Computer-Aided-Geometric-Design/">Computer Aided Geometric Design</a>
-            </td>
-            <td align="center">
-              <a href="https://tysunseven.github.io/2024-Fall-Digital-Image-Processing/">Digital Image Processing</a>
-            </td>
-            <td align="center">
-              <a href="https://tysunseven.github.io/topopt-hw/">Topology Optimization</a>
-            </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="2024春最优化算法讲义.pdf">2024春最优化算法讲义</a>
-            </td>
-            <td align="center">
-              <a href="2024秋运筹学讲义.pdf">2024秋运筹学讲义</a>
-            </td>
-            <td align="center">
-              <a href="https://qingfang1208.github.io/Course/2024_spring_DGP/index.html">2024春数字几何处理PPT</a>
-            </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="2020春数字几何处理PPT.pdf">2020春数字几何处理PPT</a>
-            </td>
-            <td align="center">
-              <a href="2024秋计算机辅助几何设计PPT.pdf">2024秋计算机辅助几何设计PPT</a>
-            </td>
-            <td align="center">
-              <a href="2018秋数值代数PPT.pdf">2018秋数值代数PPT</a>
-            </td>
-          </tr>
-          <tr>
-            <td align="center">
-              <a href="2024春数值分析PPT.pdf">2024春数值分析PPT</a>
-            </td>
-          </tr>
-    </table>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="Analysis.pdf" title="Analysis">Analysis</a>
+      </td>
+      <td align="center">
+        <a href="Real_Analysis.pdf" title="Real_Analysis">Real Analysis</a>
+      </td>
+      <td align="center">
+        <a href="Complex_Analysis.pdf" title="Complex_Analysis">Complex Analysis</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="https://rec.ustc.edu.cn/share/6b9bf8f0-2dd0-11ed-8f6e-b1f931135ded">李皓昭20年春复分析讲义</a>
+      </td>
+      <td align="center">
+        <a href="Functional_Analysis.pdf" title="Functional_Analysis">Functional Analysis</a>
+      </td>  
+      <td align="center">
+        <a href="Fourier_Analysis.pdf" title="Fourier_Analysis">Fourier Analysis</a>
+      </td> 
+    </tr>
+    <tr>
+      <td colspan="3" align="center">
+        <b>Equation</b>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="Ordinary Differential Equation.pdf" title="Ordinary Differential Equation">Ordinary Differential Equation</a>
+      </td>
+      <td align="center">
+        <a href="Partial Differential Equation 1.pdf" title="Partial Differential Equation 1">Partial Differential Equation 1</a>
+      </td>
+      <td align="center">
+        <a href="Complex Differential Equation.pdf" title="Complex Differential Equation">Complex Differential Equation</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="Partial Differential Equation 2.pdf" title="Partial Differential Equation 2">Partial Differential Equation 2</a>
+      </td>
+      <td align="center"></td>
+      <td align="center"></td> <!-- 补充空单元格，保持表格结构完整 -->
+    </tr>
+    <tr>
+      <td colspan="3" align="center">
+        <b>Probability</b>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="Probability_Theory.pdf" title="Probability Theory">Probability Theory</a>
+      </td>
+      <td align="center">
+        <a href="http://home.ustc.edu.cn/~richardzheng/math/Probability.pdf" title="郑滕飞的概率论笔记">郑滕飞的概率论笔记</a>
+      </td>
+      <td align="center"></td>
+    </tr>
+    <tr>
+      <td colspan="3" align="center">
+        <b>Algebra</b>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="Linear_Algebra.pdf" title="Linear Algebra">Linear Algebra</a>
+      </td>
+      <td align="center">
+        <a href="Abstract_Algebra.pdf" title="Abstract Algebra">Abstract Algebra</a>
+      </td>
+      <td align="center">
+        <a href="https://rec.ustc.edu.cn/share/fdec2d40-8fc1-11ed-89b1-73913b5f017a" title="陈小伍20年春近世代数H课件与板书">陈小伍20年春近世代数H课件与板书</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="Algebra.pdf">Algebra</a>
+      </td>
+      <td align="center">
+        <a href="Commutative_Algebra.pdf">Commutative Algebra</a>
+      </td>
+      <td align="center">
+        <a href="Lie_Algebra.pdf" title="Lie Algebra">Lie Algebra</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="Category_Theory.pdf">Category Theory</a>
+      </td>
+      <td align="center"></td>
+      <td align="center"></td>
+    </tr>
+    <tr>
+      <td colspan="3" align="center">
+        <b>Topology</b>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="General Topology.pdf">General Topology</a>
+      </td>
+      <td align="center">
+        <a href="Algebraic Topology I.pdf">Algebraic Topology I</a>
+      </td>
+      <td align="center">
+        <a href="Algebraic_Topology.pdf">Algebraic Topology II</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="2022年春代数拓扑1.pdf">2022年春代数拓扑1</a>
+      </td>
+      <td align="center">
+        <a href="2022年秋代数拓扑2.pdf">2022年秋代数拓扑2</a>
+      </td>
+      <td align="center"></td> <!-- 补充空单元格，保持表格结构完整 -->
+    </tr>
+    <tr>
+      <td colspan="3" align="center">
+        <b>Geometry</b>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="https://rec.ustc.edu.cn/share/3d669e90-8fc3-11ed-b152-3f15f4cd2cb6">几何学基础讲义（盛茂、王作勤）</a>
+      </td>
+      <td align="center">
+        <a href="Differential_Geometry.pdf" title="Differential Geometry">Differential Geometry</a>
+      </td>
+      <td align="center">
+        <a href="Manifolds.pdf">Smooth Manifolds</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="Riemannian_Geometry.pdf" title="Riemannian Geometry">Riemannian Geometry</a>
+      </td>
+      <td align="center">
+        <a href="Complex_Geometry.pdf">Complex Geometry</a>
+      </td>
+      <td align="center">
+        <a href="Symplectic Geometry.pdf">Symplectic Geometry</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="Riemann_Surface.pdf">Riemann Surface</a>
+      </td>
+      <td align="center">
+        <a href="Algebraic_Geometry.pdf">Algebraic Geometry</a>
+      </td>
+      <td align="center"></td>
+    </tr>
+    <tr>
+      <td colspan="3" align="center">
+        <b>Physics</b>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="Theoretical Machanics for Mathematicians.pdf">Theoretical Mechanics for Mathematicians</a>
+      </td>
+      <td align="center">
+        <a href="Quantum_Mechanics.pdf">Quantum Mechanics</a>
+      </td>
+      <td align="center">
+        <a href="连续介质力学讲义1（黄建华）.pdf">连续介质力学讲义1（黄建华）</a>
+      </td>            
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="连续介质力学讲义2（黄建华）.pdf">连续介质力学讲义2（黄建华）</a>
+      </td>
+      <td align="center">
+        <a href="Continuum_Mechanics.pdf">Continuum Mechanics</a>
+      </td>
+      <td align="center"></td> <!-- 补充空单元格，保持表格结构完整 -->
+    </tr>
+    <tr>
+      <td colspan="3" align="center">
+        <b>Computation</b>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="Finite Element Methods.pdf">Finite Element Methods</a>
+      </td>
+      <td align="center">
+        <a href="Numerical solution for Partial Differential Equations.pdf">Numerical solution for Partial Differential Equations</a>
+      </td>
+      <td align="center">
+        <a href="2024秋PDE数值解讲义.pdf">2024秋PDE数值解讲义</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="2024秋PDE数值解作业参考.pdf">2024秋PDE数值解作业参考</a>
+      </td>
+      <td align="center">
+        <a href="2024秋PDE数值解助教复习课.pdf">2024秋PDE数值解助教复习课</a>
+      </td>
+      <td align="center">
+        <a href="Spline Functions and Approximation Theory.pdf">Spline Functions and Approximation Theory</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="https://tysunseven.github.io/2024-Fall-Computer-Aided-Geometric-Design/">Computer Aided Geometric Design</a>
+      </td>
+      <td align="center">
+        <a href="https://tysunseven.github.io/2024-Fall-Digital-Image-Processing/">Digital Image Processing</a>
+      </td>
+      <td align="center">
+        <a href="https://tysunseven.github.io/topopt-hw/">Topology Optimization</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="2024春最优化算法讲义.pdf">2024春最优化算法讲义</a>
+      </td>
+      <td align="center">
+        <a href="2024秋运筹学讲义.pdf">2024秋运筹学讲义</a>
+      </td>
+      <td align="center">
+        <a href="https://qingfang1208.github.io/Course/2024_spring_DGP/index.html">2024春数字几何处理PPT</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="2020春数字几何处理PPT.pdf">2020春数字几何处理PPT</a>
+      </td>
+      <td align="center">
+        <a href="2024秋计算机辅助几何设计PPT.pdf">2024秋计算机辅助几何设计PPT</a>
+      </td>
+      <td align="center">
+        <a href="2018秋数值代数PPT.pdf">2018秋数值代数PPT</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="2024春数值分析PPT.pdf">2024春数值分析PPT</a>
+      </td>
+      <td align="center"></td>
+      <td align="center"></td> <!-- 补充空单元格，保持表格结构完整 -->
+    </tr>
+  </table>
+
+  <script>
+    // 星空生成脚本
+    const starsContainer = document.getElementById('stars');
+    const starCount = 120;
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.width = star.style.height = Math.random() * 3 + 'px';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      starsContainer.appendChild(star);
+    }
+
+    // 手动触发 MathJax 渲染
+    if (window.MathJax) {
+      MathJax.typesetPromise().catch(err => console.error('MathJax 渲染错误:', err));
+    }
+  </script>
 
 </body>
 </html>
