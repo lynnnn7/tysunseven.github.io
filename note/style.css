@@ -38,14 +38,14 @@ body {
   position: absolute;
   font-size: 1.3em;
   color: #aee3ff;
-  opacity: 0.9;
+  opacity: 0.6;
   user-select: none;
   animation: float 12s ease-in-out infinite;
 }
 @keyframes float {
-  0% { transform: translateY(0px); opacity: 0.5; }
-  50% { transform: translateY(-20px); opacity: 1; }
-  100% { transform: translateY(0px); opacity: 0.5; }
+  0% { transform: translateY(0px); opacity: 0.3; }
+  50% { transform: translateY(-20px); opacity: 0.6; }
+  100% { transform: translateY(0px); opacity: 0.3; }
 }
 
 /* 侧边栏 */
@@ -54,7 +54,7 @@ body {
   top: 0;
   left: 0;
   height: 100vh;
-  width: 220px;
+  width: 140px;
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(6px);
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
@@ -113,7 +113,7 @@ body {
 
 /* 内容区 */
 .content {
-  margin-left: 240px;
+  margin-left: 140px;
   padding: 40px 60px;
   transition: margin-left 0.3s ease;
 }
@@ -175,4 +175,7 @@ td {
   section { padding: 20px; margin-bottom: 60px; }
   td { padding: 8px 4px; }
   .table-link { font-size: 0.9em; }
+}
+.content.collapsed {
+  margin-left: 80px;
 }
