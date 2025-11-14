@@ -1,9 +1,9 @@
 body {
   margin: 0;
   font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
-  background: linear-gradient(to top, #012340, #034C8C, #03588C, #658DA6);
+  background: linear-gradient(to top, #012340, #034C8C, #03588C, #2d6487);
   color: #f2f2f2;
-  background-attachment: fixed;
+  /* background-attachment: fixed; */
   overflow-x: hidden;
   min-height: 100vh;
 }
